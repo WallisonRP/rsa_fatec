@@ -1,27 +1,24 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../model/molde_texto.dart';
 
-class EncryptPage extends StatefulWidget {
-  const EncryptPage({super.key});
+class DecryptPage extends StatefulWidget {
+  const DecryptPage({super.key});
 
   @override
-  State<EncryptPage> createState() => _EncryptPageState();
+  State<DecryptPage> createState() => _DecryptPageState();
 }
 
-class _EncryptPageState extends State<EncryptPage> {
-  double _valor = 1;
-
+class _DecryptPageState extends State<DecryptPage> {
   @override
   Widget build(BuildContext context) {
-    double _tamanho = MediaQuery.of(context).size.width * 0.2;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: Text("Encriptar"),
+        title: Text("Desencriptar"),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24),
@@ -30,27 +27,12 @@ class _EncryptPageState extends State<EncryptPage> {
           children: [
             Center(
               child: MoldeTexto(
-                texto: "Nível de segurança",
+                texto: "Nível de segurança: 1",
                 tamanho: 18,
               ),
             ),
-            SizedBox(height: 10),
-            SfSlider(
-                inactiveColor: Colors.grey,
-                value: _valor,
-                min: 1,
-                max: 4,
-                interval: 1,
-                showLabels: true,
-                stepSize: 1,
-                onChanged: (dynamic valor) {
-                  setState(() {
-                    _valor = valor;
-                  });
-                }),
-            SizedBox(height: 30),
             // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
-            SizedBox(height: 15),
+            SizedBox(height: 50),
             Row(
               children: [
                 MoldeTexto(texto: "Chaves privadas", tamanho: 18),
@@ -87,19 +69,10 @@ class _EncryptPageState extends State<EncryptPage> {
               ),
             ),
             SizedBox(height: 30),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {},
-                child: MoldeTexto(texto: "Gerar novas chaves", tamanho: 18),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.fromLTRB(40, 20, 40, 20)),
-              ),
-            ),
             SizedBox(height: 40),
             Center(
                 child: MoldeTexto(
-                    texto: "Texto a ser encriptado", tamanho: 18)),
+                    texto: "Texto a ser desencriptado", tamanho: 18)),
             SizedBox(height: 10),
             TextFormField(
               maxLength: 280,
@@ -113,7 +86,7 @@ class _EncryptPageState extends State<EncryptPage> {
             Center(
               child: ElevatedButton(
                   onPressed: () {},
-                  child: MoldeTexto(texto: "Encriptar", tamanho: 18),
+                  child: MoldeTexto(texto: "Desencriptar", tamanho: 18),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       padding: EdgeInsets.fromLTRB(40, 20, 40, 20))),
