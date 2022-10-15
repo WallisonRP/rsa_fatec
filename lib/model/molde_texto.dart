@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MoldeTexto extends StatelessWidget {
   final texto;
-  final tamanho;
+  final double tamanho;
   const MoldeTexto({super.key, required this.texto, required this.tamanho});
 
   @override

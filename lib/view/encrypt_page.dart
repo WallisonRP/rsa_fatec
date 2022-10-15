@@ -13,11 +13,13 @@ class EncryptPage extends StatefulWidget {
 }
 
 class _EncryptPageState extends State<EncryptPage> {
-  double _valor = 1;
+  double _valor = 1.0;
   int p = 0;
   int q = 0;
   int n = 0;
   int z = 0;
+  int d = 0;
+  int e = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,81 +31,84 @@ class _EncryptPageState extends State<EncryptPage> {
         title: Text("Encriptar"),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: MoldeTexto(
                 texto: "Nível de segurança",
-                tamanho: 18,
+                tamanho: 18.0,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.0),
             SfSlider(
                 inactiveColor: Colors.grey,
                 value: _valor,
                 min: 1,
                 max: 4,
-                interval: 1,
+                interval: 1.0,
                 showLabels: true,
-                stepSize: 1,
+                stepSize: 1.0,
                 onChanged: (dynamic valor) {
                   setState(() {
                     _valor = valor;
                   });
                 }),
-            SizedBox(height: 30),
+            SizedBox(height: 30.0),
             // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
-            SizedBox(height: 15),
+            SizedBox(height: 15.0),
             Row(
               children: [
                 MoldeTexto(texto: "Chaves privadas", tamanho: 18),
-                SizedBox(width: 14),
+                SizedBox(width: 14.0),
                 Icon(Icons.visibility_off)
               ],
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.0),
             Container(
               child: GridView.count(
                 shrinkWrap: true,
-                childAspectRatio: (1 / 0.2),
+                childAspectRatio: (1.0 / 0.2),
                 crossAxisCount: 3,
                 children: [
                   MoldeTexto(texto: "P = $p", tamanho: 18),
                   MoldeTexto(texto: "Q = $q", tamanho: 18),
-                  MoldeTexto(texto: "D = 7", tamanho: 18),
+                  MoldeTexto(texto: "D = $d", tamanho: 18),
                 ],
               ),
             ),
-            SizedBox(height: 30),
-            MoldeTexto(texto: "Chaves públicas", tamanho: 18),
-            SizedBox(height: 8),
+            SizedBox(height: 30.0),
+            MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
+            SizedBox(height: 8.0),
             Container(
               child: GridView.count(
                 shrinkWrap: true,
-                childAspectRatio: (1 / 0.2),
+                childAspectRatio: (1.0 / 0.2),
                 crossAxisCount: 3,
                 children: [
-                  MoldeTexto(texto: "N = $n", tamanho: 18),
-                  MoldeTexto(texto: "Z = $z", tamanho: 18),
-                  MoldeTexto(texto: "E = 23", tamanho: 18),
+                  MoldeTexto(
+                      texto: "N = $n",
+                      tamanho: 18.0),
+                  MoldeTexto(texto: "Z = $z", tamanho: 18.0),
+                  MoldeTexto(texto: "E = 23", tamanho: 18.0),
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 30.0),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  int aux1 = _gerarChavesPQ(_valor.toInt());
-                  int aux2 = _gerarChavesPQ(_valor.toInt());
+                onPressed: () async {
+                  int aux1 = await _gerarChavesPQ(_valor.toInt());
+                  int aux2 = await _gerarChavesPQ(_valor.toInt());
 
                   while (aux1 == aux2) {
-                    aux2 = _gerarChavesPQ(_valor.toInt());
+                    aux2 = await _gerarChavesPQ(_valor.toInt());
                   }
 
-                  int aux3 = _gerarChaveN(p: aux1, q: aux2);
-                  int aux4 = _gerarChaveZ(p: aux1, q: aux2);
+                  int aux3 = await _gerarChaveN(p: aux1, q: aux2);
+                  int aux4 = await _gerarChaveZ(p: aux1, q: aux2);
+                  // int aux5 = await _gerarChaveD(_valor.toInt());
 
                   setState(() {
                     p = aux1;
@@ -115,30 +120,30 @@ class _EncryptPageState extends State<EncryptPage> {
                 child: MoldeTexto(texto: "Gerar novas chaves", tamanho: 18),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: EdgeInsets.fromLTRB(40, 20, 40, 20)),
+                    padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 40.0),
             Center(
                 child:
                     MoldeTexto(texto: "Texto a ser encriptado", tamanho: 18)),
-            SizedBox(height: 10),
+            SizedBox(height: 10.0),
             TextFormField(
               maxLength: 280,
               maxLines: 5,
               decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 3, color: Colors.blue),
+                      borderSide: BorderSide(width: 3.0, color: Colors.blue),
                       borderRadius: BorderRadius.circular(15.0))),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.0),
             Center(
               child: ElevatedButton(
                   onPressed: () {},
                   child: MoldeTexto(texto: "Encriptar", tamanho: 18),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      padding: EdgeInsets.fromLTRB(40, 20, 40, 20))),
+                      padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0))),
             ),
           ],
         ),
@@ -154,7 +159,7 @@ class _EncryptPageState extends State<EncryptPage> {
     return ((p - 1) * (q - 1));
   }
 
-  int _gerarChavesPQ(int seguranca) {
+  _gerarChavesPQ(int seguranca) {
     late int valor;
     switch (seguranca) {
       case 1:
