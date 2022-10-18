@@ -6,7 +6,12 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: HomePage(),
     debugShowCheckedModeBanner: false,
+    initialRoute: 'inicio',
+    routes: {
+      'inicio': ((context) => HomePage()),
+      'encrypt': ((context) => EncryptPage()),
+      'decrypt': ((context) => DecryptPage()),
+    },
   ));
 }

@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/caixa_de_aviso.dart';
 import '../model/molde_texto.dart';
 import 'dart:math';
+
+import '../model/test.dart';
 
 class EncryptPage extends StatefulWidget {
   const EncryptPage({super.key});
@@ -13,6 +17,7 @@ class EncryptPage extends StatefulWidget {
 }
 
 class _EncryptPageState extends State<EncryptPage> {
+  TextEditingController _controller = TextEditingController();
   double _valor = 1.0;
   int p = 0;
   int q = 0;
@@ -57,65 +62,77 @@ class _EncryptPageState extends State<EncryptPage> {
                 }),
             SizedBox(height: 30.0),
             // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
-            SizedBox(height: 15.0),
-            Row(
+            Column(
               children: [
-                MoldeTexto(texto: "Chaves privadas", tamanho: 18),
-                SizedBox(width: 14.0),
-                Icon(Icons.visibility_off)
+                Row(
+                  children: [
+                    MoldeTexto(texto: "Chaves privadas", tamanho: 18),
+                    SizedBox(width: 14.0),
+                    Icon(Icons.visibility_off)
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    childAspectRatio: (1.0 / 0.2),
+                    crossAxisCount: 3,
+                    children: [
+                      MoldeTexto(texto: "P = $p", tamanho: 18),
+                      MoldeTexto(texto: "Q = $q", tamanho: 18),
+                      MoldeTexto(texto: "D = $d", tamanho: 18),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    childAspectRatio: (1.0 / 0.2),
+                    crossAxisCount: 3,
+                    children: [
+                      MoldeTexto(texto: "N = $n", tamanho: 18.0),
+                      MoldeTexto(texto: "Z = $z", tamanho: 18.0),
+                      MoldeTexto(texto: "E = $e", tamanho: 18.0),
+                    ],
+                  ),
+                ),
               ],
-            ),
-            SizedBox(height: 8.0),
-            Container(
-              child: GridView.count(
-                shrinkWrap: true,
-                childAspectRatio: (1.0 / 0.2),
-                crossAxisCount: 3,
-                children: [
-                  MoldeTexto(texto: "P = $p", tamanho: 18),
-                  MoldeTexto(texto: "Q = $q", tamanho: 18),
-                  MoldeTexto(texto: "D = $d", tamanho: 18),
-                ],
-              ),
-            ),
-            SizedBox(height: 30.0),
-            MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
-            SizedBox(height: 8.0),
-            Container(
-              child: GridView.count(
-                shrinkWrap: true,
-                childAspectRatio: (1.0 / 0.2),
-                crossAxisCount: 3,
-                children: [
-                  MoldeTexto(
-                      texto: "N = $n",
-                      tamanho: 18.0),
-                  MoldeTexto(texto: "Z = $z", tamanho: 18.0),
-                  MoldeTexto(texto: "E = 23", tamanho: 18.0),
-                ],
-              ),
             ),
             SizedBox(height: 30.0),
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  int aux1 = await _gerarChavesPQ(_valor.toInt());
-                  int aux2 = await _gerarChavesPQ(_valor.toInt());
+                  p = await _gerarChavesPQ(_valor.toInt());
+                  q = await _gerarChavesPQ(_valor.toInt());
 
-                  while (aux1 == aux2) {
-                    aux2 = await _gerarChavesPQ(_valor.toInt());
+                  while (p == q) {
+                    q = await _gerarChavesPQ(_valor.toInt());
                   }
 
-                  int aux3 = await _gerarChaveN(p: aux1, q: aux2);
-                  int aux4 = await _gerarChaveZ(p: aux1, q: aux2);
-                  // int aux5 = await _gerarChaveD(_valor.toInt());
+                  n = await _gerarChaveN(p: p, q: q);
+                  z = await _gerarChaveZ(p: p, q: q);
+                  d = await _gerarChaveD(_valor.toInt());
+                  e = await _gerarChaveE(seguranca: _valor.toInt());
 
-                  setState(() {
-                    p = aux1;
-                    q = aux2;
-                    n = aux3;
-                    z = aux4;
-                  });
+                  // while (e == 0) {
+                  //   e = await _gerarChaveE(seguranca: _valor.toInt());
+                  // }
+                  // _gerarChaveE(seguranca: _valor.toInt(), d: d, z: z);
+
+                  setState(() {});
                 },
                 child: MoldeTexto(texto: "Gerar novas chaves", tamanho: 18),
                 style: ElevatedButton.styleFrom(
@@ -129,6 +146,7 @@ class _EncryptPageState extends State<EncryptPage> {
                     MoldeTexto(texto: "Texto a ser encriptado", tamanho: 18)),
             SizedBox(height: 10.0),
             TextFormField(
+              controller: _controller,
               maxLength: 280,
               maxLines: 5,
               decoration: InputDecoration(
@@ -139,7 +157,17 @@ class _EncryptPageState extends State<EncryptPage> {
             SizedBox(height: 10.0),
             Center(
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String retorno = _encryptText(_controller.text);  
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return CaixaAlerta(
+                            texto: retorno,
+                            context: context,
+                          );
+                        });
+                  },
                   child: MoldeTexto(texto: "Encriptar", tamanho: 18),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -149,6 +177,120 @@ class _EncryptPageState extends State<EncryptPage> {
         ),
       ),
     );
+  }
+
+  // _salvarChaves() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setInt('p', p);
+  //   await prefs.setInt('q', q);
+  //   await prefs.setInt('n', n);
+  //   await prefs.setInt('z', z);
+  //   await prefs.setInt('d', d);
+  //   await prefs.setInt('e', e);
+  // }
+
+  // _recuperarChaves() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   p = await prefs.getInt('p');
+  //   q = await prefs.getInt('q');
+  //   n = await prefs.getInt('n');
+  //   z = await prefs.getInt('z');
+  //   d = await prefs.getInt('d');
+  //   return true;
+  // }
+  // _recuperarChaves({required String chaveDesejada}) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final int? chave = await prefs.getInt(chaveDesejada);
+  //   return chave;
+  // }
+
+  _encryptText(String texto) {
+    List vetorAscii = texto.codeUnits; //transformando frase em ASCII
+
+    // print(vetorAscii);
+
+    List vetorCript = [];
+    for (int i in vetorAscii) {
+      vetorCript.add(pow(i, e) % n);
+    }
+
+    String textoCript = vetorCript
+        .toString()
+        .replaceAll(',', '')
+        .replaceAll('[', '')
+        .replaceAll(']', '');
+    // print(textoCript);
+    return textoCript;
+  }
+
+  _gerarChaveE({required int seguranca}) {
+    late int valor;
+    switch (seguranca) {
+      case 1:
+        valor = 1000;
+        break;
+      case 2:
+        valor = 2000;
+        break;
+      case 3:
+        valor = 3000;
+        break;
+      case 4:
+        valor = 4000;
+        break;
+    }
+
+    List vetorE = [];
+    for (int e = 1, i = 1; vetorE.length != 5; e++, i++) {
+      if ((e * d) % z == 1) {
+        vetorE.add(e);
+      }
+    }
+
+    var numeroE = Random().nextInt(vetorE.length);
+    return vetorE[numeroE];
+    // return vetorE[numeroE];
+  }
+
+  _gerarChaveD(int seguranca) {
+    List vetorD = [];
+    late int valor;
+
+    switch (seguranca) {
+      case 1:
+        // valor = _geradorDePrimos(25);
+        valor = 53;
+        break;
+      case 2:
+        // valor = _geradorDePrimos(168);
+        valor = 95;
+        break;
+      case 3:
+        // valor = _geradorDePrimos(1229);
+        valor = 132;
+        break;
+      case 4:
+        // valor = _geradorDePrimos(9592);
+        valor = 168;
+        break;
+    }
+
+    for (int d = 0; d <= valor; d++) {
+      bool inserir = true; //controla a inserção de D no vetor
+      for (int i = z; i > 1; i--) {
+        if ((d % i == 0) && (z % i == 0)) {
+          inserir = false;
+          break; //não são primos
+        }
+      }
+
+      if (inserir) {
+        vetorD.add(d);
+      }
+    }
+
+    var _numero = Random().nextInt(vetorD.length);
+    return vetorD[_numero];
   }
 
   _gerarChaveN({required p, required q}) {
@@ -163,16 +305,20 @@ class _EncryptPageState extends State<EncryptPage> {
     late int valor;
     switch (seguranca) {
       case 1:
-        valor = _geradorDePrimos(25);
+        // valor = _geradorDePrimos(25);
+        valor = _geradorDePrimos(53);
         break;
       case 2:
-        valor = _geradorDePrimos(168);
+        // valor = _geradorDePrimos(168);
+        valor = _geradorDePrimos(95);
         break;
       case 3:
-        valor = _geradorDePrimos(1229);
+        // valor = _geradorDePrimos(1229);
+        valor = _geradorDePrimos(132);
         break;
       case 4:
-        valor = _geradorDePrimos(9592);
+        // valor = _geradorDePrimos(9592);
+        valor = _geradorDePrimos(168);
         break;
     }
 
@@ -263,60 +409,7 @@ class _EncryptPageState extends State<EncryptPage> {
           (i % 23 != 0) &&
           (i % 29 != 0) &&
           (i % 31 != 0) &&
-          (i % 37 != 0) &&
-          (i % 41 != 0) &&
-          (i % 43 != 0) &&
-          (i % 47 != 0) &&
-          (i % 53 != 0) &&
-          (i % 59 != 0) &&
-          (i % 61 != 0) &&
-          (i % 67 != 0) &&
-          (i % 71 != 0) &&
-          (i % 73 != 0) &&
-          (i % 79 != 0) &&
-          (i % 83 != 0) &&
-          (i % 89 != 0) &&
-          (i % 97 != 0) &&
-          (i % 101 != 0) &&
-          (i % 103 != 0) &&
-          (i % 107 != 0) &&
-          (i % 109 != 0) &&
-          (i % 113 != 0) &&
-          (i % 127 != 0) &&
-          (i % 131 != 0) &&
-          (i % 137 != 0) &&
-          (i % 139 != 0) &&
-          (i % 149 != 0) &&
-          (i % 151 != 0) &&
-          (i % 157 != 0) &&
-          (i % 163 != 0) &&
-          (i % 167 != 0) &&
-          (i % 173 != 0) &&
-          (i % 179 != 0) &&
-          (i % 181 != 0) &&
-          (i % 191 != 0) &&
-          (i % 193 != 0) &&
-          (i % 197 != 0) &&
-          (i % 199 != 0) &&
-          (i % 211 != 0) &&
-          (i % 223 != 0) &&
-          (i % 227 != 0) &&
-          (i % 229 != 0) &&
-          (i % 233 != 0) &&
-          (i % 239 != 0) &&
-          (i % 241 != 0) &&
-          (i % 251 != 0) &&
-          (i % 257 != 0) &&
-          (i % 263 != 0) &&
-          (i % 269 != 0) &&
-          (i % 271 != 0) &&
-          (i % 277 != 0) &&
-          (i % 281 != 0) &&
-          (i % 283 != 0) &&
-          (i % 293 != 0) &&
-          (i % 307 != 0) &&
-          (i % 311 != 0) &&
-          (i % 313 != 0)) {
+          (i % 37 != 0)) {
         vetorPrimo.add(i);
       }
     }
