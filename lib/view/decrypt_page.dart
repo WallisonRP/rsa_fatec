@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/decrypt_function.dart';
 import '../model/caixa_de_aviso.dart';
 import '../model/molde_texto.dart';
+import '../model/text_input.dart';
 
 class DecryptPage extends StatefulWidget {
   const DecryptPage({super.key});
@@ -45,7 +46,6 @@ class _DecryptPageState extends State<DecryptPage> {
                 tamanho: 18,
               ),
             ),
-            // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
             SizedBox(height: 50),
             Row(
               children: [
@@ -102,14 +102,8 @@ class _DecryptPageState extends State<DecryptPage> {
                     texto: "Cole abaixo o texto a ser desencriptado",
                     tamanho: 16)),
             SizedBox(height: 10),
-            TextFormField(
+            TextInput(
               controller: _controller,
-              maxLength: 280,
-              maxLines: 5,
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 3, color: Colors.blue),
-                      borderRadius: BorderRadius.circular(15.0))),
             ),
             SizedBox(height: 10),
             Center(
@@ -121,7 +115,9 @@ class _DecryptPageState extends State<DecryptPage> {
                         builder: (_) {
                           return CaixaAlerta(
                             texto: retorno,
-                            context: context,
+                            titulo: 'Texto desencriptado',
+                            descricao: 'Copie o texto abaixo e faça bom uso: ',
+                            context2: context,
                           );
                         });
                   },

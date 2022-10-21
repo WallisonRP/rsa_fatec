@@ -7,7 +7,9 @@ import '../model/caixa_de_aviso.dart';
 import '../model/molde_texto.dart';
 import 'dart:math';
 
+import '../model/popup_menu.dart';
 import '../model/test.dart';
+import '../model/text_input.dart';
 
 class EncryptPage extends StatefulWidget {
   const EncryptPage({
@@ -28,6 +30,8 @@ class _EncryptPageState extends State<EncryptPage> {
   int z = 0;
   int d = 0;
   int e = 0;
+
+  var icon = Icons.visibility_off;
 
   @override
   void initState() {
@@ -57,6 +61,22 @@ class _EncryptPageState extends State<EncryptPage> {
           backgroundColor: Colors.blue,
           centerTitle: true,
           title: Text("Encriptar"),
+          actions: [
+            PopupMenuButton(itemBuilder: (context2) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: Text("Recuperar Chaves"),
+                ),
+              ];
+            }, onSelected: (value) {
+              if (value == 0) {
+                setState(() {
+                  _recuperarChaves();
+                });
+              }
+            })
+          ],
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(24.0),
@@ -91,7 +111,17 @@ class _EncryptPageState extends State<EncryptPage> {
                     children: [
                       MoldeTexto(texto: "Chaves privadas", tamanho: 18),
                       SizedBox(width: 14.0),
-                      Icon(Icons.visibility_off)
+                      GestureDetector(
+                        child: Icon(icon),
+                        onTap: () {
+                          if (icon == Icons.visibility_off) {
+                            icon = Icons.visibility;
+                          } else if (icon == Icons.visibility) {
+                            icon = Icons.visibility_off;
+                          }
+                          setState(() {});
+                        },
+                      )
                     ],
                   ),
                   SizedBox(
@@ -169,15 +199,18 @@ class _EncryptPageState extends State<EncryptPage> {
                   child:
                       MoldeTexto(texto: "Texto a ser encriptado", tamanho: 18)),
               SizedBox(height: 10.0),
-              TextFormField(
+              TextInput(
                 controller: _controller,
-                maxLength: 280,
-                maxLines: 5,
-                decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 3.0, color: Colors.blue),
-                        borderRadius: BorderRadius.circular(15.0))),
               ),
+              // TextFormField(
+              //   controller: _controller,
+              //   maxLength: 280,
+              //   maxLines: 5,
+              //   decoration: InputDecoration(
+              //       enabledBorder: OutlineInputBorder(
+              //           borderSide: BorderSide(width: 3.0, color: Colors.blue),
+              //           borderRadius: BorderRadius.circular(15.0))),
+              // ),
               SizedBox(height: 10.0),
               Center(
                 child: ElevatedButton(
@@ -189,7 +222,9 @@ class _EncryptPageState extends State<EncryptPage> {
                           builder: (_) {
                             return CaixaAlerta(
                               texto: retorno,
-                              context: context,
+                              titulo: 'Texto encriptado',
+                              descricao: 'Copie o texto abaixo e o mantenha em segurança: ',
+                              context2: context,
                             );
                           });
                     },
@@ -198,13 +233,13 @@ class _EncryptPageState extends State<EncryptPage> {
                         backgroundColor: Colors.blue,
                         padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0))),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _recuperarChaves();
-                    });
-                  },
-                  child: Text("Teste"))
+              // ElevatedButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         _recuperarChaves();
+              //       });
+              //     },
+              //     child: Text("Teste"))
             ],
           ),
         ),
