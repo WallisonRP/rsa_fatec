@@ -46,8 +46,9 @@ class _HomePageState extends State<HomePage> {
                 height: _altura,
               ),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EncryptPage()));
+                Navigator.pushNamed(context, 'encrypt');
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => EncryptPage()));
               },
             ),
             GestureDetector(

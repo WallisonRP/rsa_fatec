@@ -10,7 +10,9 @@ import 'dart:math';
 import '../model/test.dart';
 
 class EncryptPage extends StatefulWidget {
-  const EncryptPage({super.key});
+  const EncryptPage({
+    super.key,
+  });
 
   @override
   State<EncryptPage> createState() => _EncryptPageState();
@@ -19,6 +21,7 @@ class EncryptPage extends StatefulWidget {
 class _EncryptPageState extends State<EncryptPage> {
   TextEditingController _controller = TextEditingController();
   double _valor = 1.0;
+
   int p = 0;
   int q = 0;
   int n = 0;
@@ -27,191 +30,204 @@ class _EncryptPageState extends State<EncryptPage> {
   int e = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  _recuperarChaves() async {
+    final prefs = await SharedPreferences.getInstance();
+    p = await prefs.getInt('p')!.toInt();
+    q = await prefs.getInt('q')!.toInt();
+    n = await prefs.getInt('n')!.toInt();
+    z = await prefs.getInt('z')!.toInt();
+    d = await prefs.getInt('d')!.toInt();
+    e = await prefs.getInt('e')!.toInt();
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     double _tamanho = MediaQuery.of(context).size.width * 0.2;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-        title: Text("Encriptar"),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: MoldeTexto(
-                texto: "Nível de segurança",
-                tamanho: 18.0,
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          centerTitle: true,
+          title: Text("Encriptar"),
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: MoldeTexto(
+                  texto: "Nível de segurança",
+                  tamanho: 18.0,
+                ),
               ),
-            ),
-            SizedBox(height: 10.0),
-            SfSlider(
-                inactiveColor: Colors.grey,
-                value: _valor,
-                min: 1,
-                max: 4,
-                interval: 1.0,
-                showLabels: true,
-                stepSize: 1.0,
-                onChanged: (dynamic valor) {
-                  setState(() {
-                    _valor = valor;
-                  });
-                }),
-            SizedBox(height: 30.0),
-            // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    MoldeTexto(texto: "Chaves privadas", tamanho: 18),
-                    SizedBox(width: 14.0),
-                    Icon(Icons.visibility_off)
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    childAspectRatio: (1.0 / 0.2),
-                    crossAxisCount: 3,
+              SizedBox(height: 10.0),
+              SfSlider(
+                  inactiveColor: Colors.grey,
+                  value: _valor,
+                  min: 1,
+                  max: 4,
+                  interval: 1.0,
+                  showLabels: true,
+                  stepSize: 1.0,
+                  onChanged: (dynamic valor) {
+                    setState(() {
+                      _valor = valor;
+                    });
+                  }),
+              SizedBox(height: 30.0),
+              // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
+              Column(
+                children: [
+                  Row(
                     children: [
-                      MoldeTexto(texto: "P = $p", tamanho: 18),
-                      MoldeTexto(texto: "Q = $q", tamanho: 18),
-                      MoldeTexto(texto: "D = $d", tamanho: 18),
+                      MoldeTexto(texto: "Chaves privadas", tamanho: 18),
+                      SizedBox(width: 14.0),
+                      Icon(Icons.visibility_off)
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    childAspectRatio: (1.0 / 0.2),
-                    crossAxisCount: 3,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        MoldeTexto(texto: "P = $p", tamanho: 18),
+                        MoldeTexto(texto: "Q = $q", tamanho: 18),
+                        MoldeTexto(texto: "D = $d", tamanho: 18),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
                     children: [
-                      MoldeTexto(texto: "N = $n", tamanho: 18.0),
-                      MoldeTexto(texto: "Z = $z", tamanho: 18.0),
-                      MoldeTexto(texto: "E = $e", tamanho: 18.0),
+                      MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
                     ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.0),
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  p = await _gerarChavesPQ(_valor.toInt());
-                  q = await _gerarChavesPQ(_valor.toInt());
-
-                  while (p == q) {
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        MoldeTexto(texto: "N = $n", tamanho: 18.0),
+                        MoldeTexto(texto: "Z = $z", tamanho: 18.0),
+                        MoldeTexto(texto: "E = $e", tamanho: 18.0),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    p = await _gerarChavesPQ(_valor.toInt());
                     q = await _gerarChavesPQ(_valor.toInt());
-                  }
 
-                  n = await _gerarChaveN(p: p, q: q);
-                  z = await _gerarChaveZ(p: p, q: q);
-                  d = await _gerarChaveD(_valor.toInt());
-                  e = await _gerarChaveE(seguranca: _valor.toInt());
+                    while (p == q) {
+                      q = await _gerarChavesPQ(_valor.toInt());
+                    }
 
-                  // while (e == 0) {
-                  //   e = await _gerarChaveE(seguranca: _valor.toInt());
-                  // }
-                  // _gerarChaveE(seguranca: _valor.toInt(), d: d, z: z);
+                    n = await _gerarChaveN(p: p, q: q);
+                    z = await _gerarChaveZ(p: p, q: q);
+                    d = await _gerarChaveD(_valor.toInt());
+                    e = await _gerarChaveE();
 
-                  setState(() {});
-                },
-                child: MoldeTexto(texto: "Gerar novas chaves", tamanho: 18),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
-              ),
-            ),
-            SizedBox(height: 40.0),
-            Center(
-                child:
-                    MoldeTexto(texto: "Texto a ser encriptado", tamanho: 18)),
-            SizedBox(height: 10.0),
-            TextFormField(
-              controller: _controller,
-              maxLength: 280,
-              maxLines: 5,
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 3.0, color: Colors.blue),
-                      borderRadius: BorderRadius.circular(15.0))),
-            ),
-            SizedBox(height: 10.0),
-            Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    String retorno = _encryptText(_controller.text);  
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return CaixaAlerta(
-                            texto: retorno,
-                            context: context,
-                          );
-                        });
+                    // while (e == 0) {
+                    //   e = await _gerarChaveE(seguranca: _valor.toInt());
+                    // }
+                    // _gerarChaveE(seguranca: _valor.toInt(), d: d, z: z);
+                    // await _salvarChaves();
+                    // await _recuperarChaves();
+                    setState(() {});
                   },
-                  child: MoldeTexto(texto: "Encriptar", tamanho: 18),
+                  child: MoldeTexto(texto: "Gerar novas chaves", tamanho: 18),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0))),
-            ),
-          ],
+                      padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
+                ),
+              ),
+              SizedBox(height: 40.0),
+              Center(
+                  child:
+                      MoldeTexto(texto: "Texto a ser encriptado", tamanho: 18)),
+              SizedBox(height: 10.0),
+              TextFormField(
+                controller: _controller,
+                maxLength: 280,
+                maxLines: 5,
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3.0, color: Colors.blue),
+                        borderRadius: BorderRadius.circular(15.0))),
+              ),
+              SizedBox(height: 10.0),
+              Center(
+                child: ElevatedButton(
+                    onPressed: () {
+                      String retorno = _encryptText(_controller.text);
+                      _salvarChaves();
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return CaixaAlerta(
+                              texto: retorno,
+                              context: context,
+                            );
+                          });
+                    },
+                    child: MoldeTexto(texto: "Encriptar", tamanho: 18),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0))),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _recuperarChaves();
+                    });
+                  },
+                  child: Text("Teste"))
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // _salvarChaves() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setInt('p', p);
-  //   await prefs.setInt('q', q);
-  //   await prefs.setInt('n', n);
-  //   await prefs.setInt('z', z);
-  //   await prefs.setInt('d', d);
-  //   await prefs.setInt('e', e);
-  // }
-
-  // _recuperarChaves() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   p = await prefs.getInt('p');
-  //   q = await prefs.getInt('q');
-  //   n = await prefs.getInt('n');
-  //   z = await prefs.getInt('z');
-  //   d = await prefs.getInt('d');
-  //   return true;
-  // }
-  // _recuperarChaves({required String chaveDesejada}) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final int? chave = await prefs.getInt(chaveDesejada);
-  //   return chave;
-  // }
+  _salvarChaves() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('p', p);
+    await prefs.setInt('q', q);
+    await prefs.setInt('n', n);
+    await prefs.setInt('z', z);
+    await prefs.setInt('d', d);
+    await prefs.setInt('e', e);
+  }
 
   _encryptText(String texto) {
-    List vetorAscii = texto.codeUnits; //transformando frase em ASCII
-
-    // print(vetorAscii);
+    List vetorAscii = texto.codeUnits;
 
     List vetorCript = [];
     for (int i in vetorAscii) {
-      vetorCript.add(pow(i, e) % n);
+      vetorCript.add(i.modPow(e, n));
     }
 
     String textoCript = vetorCript
@@ -219,29 +235,12 @@ class _EncryptPageState extends State<EncryptPage> {
         .replaceAll(',', '')
         .replaceAll('[', '')
         .replaceAll(']', '');
-    // print(textoCript);
     return textoCript;
   }
 
-  _gerarChaveE({required int seguranca}) {
-    late int valor;
-    switch (seguranca) {
-      case 1:
-        valor = 1000;
-        break;
-      case 2:
-        valor = 2000;
-        break;
-      case 3:
-        valor = 3000;
-        break;
-      case 4:
-        valor = 4000;
-        break;
-    }
-
+  _gerarChaveE() {
     List vetorE = [];
-    for (int e = 1, i = 1; vetorE.length != 5; e++, i++) {
+    for (int e = 1, i = 1; vetorE.length != 1; e++, i++) {
       if ((e * d) % z == 1) {
         vetorE.add(e);
       }
@@ -249,33 +248,12 @@ class _EncryptPageState extends State<EncryptPage> {
 
     var numeroE = Random().nextInt(vetorE.length);
     return vetorE[numeroE];
-    // return vetorE[numeroE];
   }
 
   _gerarChaveD(int seguranca) {
     List vetorD = [];
-    late int valor;
 
-    switch (seguranca) {
-      case 1:
-        // valor = _geradorDePrimos(25);
-        valor = 53;
-        break;
-      case 2:
-        // valor = _geradorDePrimos(168);
-        valor = 95;
-        break;
-      case 3:
-        // valor = _geradorDePrimos(1229);
-        valor = 132;
-        break;
-      case 4:
-        // valor = _geradorDePrimos(9592);
-        valor = 168;
-        break;
-    }
-
-    for (int d = 0; d <= valor; d++) {
+    for (int d = 7; vetorD.length != 10; d++) {
       bool inserir = true; //controla a inserção de D no vetor
       for (int i = z; i > 1; i--) {
         if ((d % i == 0) && (z % i == 0)) {
@@ -305,20 +283,20 @@ class _EncryptPageState extends State<EncryptPage> {
     late int valor;
     switch (seguranca) {
       case 1:
-        // valor = _geradorDePrimos(25);
         valor = _geradorDePrimos(53);
+        // valor = _geradorDePrimos(15);
         break;
       case 2:
-        // valor = _geradorDePrimos(168);
         valor = _geradorDePrimos(95);
+        // valor = _geradorDePrimos(25);
         break;
       case 3:
-        // valor = _geradorDePrimos(1229);
         valor = _geradorDePrimos(132);
+        // valor = _geradorDePrimos(35);
         break;
       case 4:
-        // valor = _geradorDePrimos(9592);
-        valor = _geradorDePrimos(168);
+        valor = _geradorDePrimos(167);
+        // valor = _geradorDePrimos(46);
         break;
     }
 
@@ -418,5 +396,14 @@ class _EncryptPageState extends State<EncryptPage> {
 
     var _numero = Random().nextInt(limite);
     return vetorFinal[_numero];
+  }
+}
+
+class _recuperarChaves2 {
+  static _recuperarChaves(String chave) async {
+    final prefs = await SharedPreferences.getInstance();
+    int retorno = await prefs.getInt('$chave')!.toInt();
+
+    return retorno;
   }
 }

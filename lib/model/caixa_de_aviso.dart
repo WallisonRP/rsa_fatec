@@ -34,6 +34,9 @@ class CaixaAlerta extends StatelessWidget {
               Navigator.pop(context);
             },
             child: Text('Sair')),
+        SizedBox(
+          width: 15,
+        ),
         ElevatedButton(
             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(16)),
             onPressed: () {

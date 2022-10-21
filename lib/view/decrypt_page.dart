@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../controller/decrypt_function.dart';
+import '../model/caixa_de_aviso.dart';
 import '../model/molde_texto.dart';
 
 class DecryptPage extends StatefulWidget {
@@ -12,6 +17,15 @@ class DecryptPage extends StatefulWidget {
 }
 
 class _DecryptPageState extends State<DecryptPage> {
+  TextEditingController _controller = TextEditingController();
+
+  int p = 0;
+  int q = 0;
+  int n = 0;
+  int z = 0;
+  int d = 0;
+  int e = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,9 +61,9 @@ class _DecryptPageState extends State<DecryptPage> {
                 childAspectRatio: (1 / 0.2),
                 crossAxisCount: 3,
                 children: [
-                  MoldeTexto(texto: "P = 17", tamanho: 18),
-                  MoldeTexto(texto: "Q = 11", tamanho: 18),
-                  MoldeTexto(texto: "D = 7", tamanho: 18),
+                  MoldeTexto(texto: "P = $p", tamanho: 18),
+                  MoldeTexto(texto: "Q = $q", tamanho: 18),
+                  MoldeTexto(texto: "D = $d", tamanho: 18),
                 ],
               ),
             ),
@@ -62,19 +76,34 @@ class _DecryptPageState extends State<DecryptPage> {
                 childAspectRatio: (1 / 0.2),
                 crossAxisCount: 3,
                 children: [
-                  MoldeTexto(texto: "N = 187", tamanho: 18),
-                  MoldeTexto(texto: "Z = 160", tamanho: 18),
-                  MoldeTexto(texto: "E = 23", tamanho: 18),
+                  MoldeTexto(texto: "N = $n", tamanho: 18),
+                  MoldeTexto(texto: "Z = $z", tamanho: 18),
+                  MoldeTexto(texto: "E = $e", tamanho: 18),
                 ],
               ),
             ),
             SizedBox(height: 30),
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    _recuperarChaves();
+                  });
+                },
+                child: MoldeTexto(texto: "Recuperar chaves", tamanho: 18),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
+              ),
+            ),
             SizedBox(height: 40),
             Center(
                 child: MoldeTexto(
-                    texto: "Texto a ser desencriptado", tamanho: 18)),
+                    texto: "Cole abaixo o texto a ser desencriptado",
+                    tamanho: 16)),
             SizedBox(height: 10),
             TextFormField(
+              controller: _controller,
               maxLength: 280,
               maxLines: 5,
               decoration: InputDecoration(
@@ -85,7 +114,17 @@ class _DecryptPageState extends State<DecryptPage> {
             SizedBox(height: 10),
             Center(
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    String retorno = _decryptText(_controller.text);
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return CaixaAlerta(
+                            texto: retorno,
+                            context: context,
+                          );
+                        });
+                  },
                   child: MoldeTexto(texto: "Desencriptar", tamanho: 18),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -95,5 +134,35 @@ class _DecryptPageState extends State<DecryptPage> {
         ),
       ),
     );
+  }
+
+  _recuperarChaves() async {
+    final prefs = await SharedPreferences.getInstance();
+    p = await prefs.getInt('p')!.toInt();
+    q = await prefs.getInt('q')!.toInt();
+    n = await prefs.getInt('n')!.toInt();
+    z = await prefs.getInt('z')!.toInt();
+    d = await prefs.getInt('d')!.toInt();
+    e = await prefs.getInt('e')!.toInt();
+    return true;
+  }
+
+  _decryptText(String texto) {
+    List<String> vetorAsciiString = texto.split(" ");
+
+    List<int> vetorAsciiInt =
+        vetorAsciiString.map((e) => int.parse(e)).toList();
+
+    List vetorDescript = [];
+    for (int i in vetorAsciiInt) {
+      vetorDescript.add(i.modPow(d, n));
+    }
+
+    String resultado = "";
+    for (int i = 0; i < vetorDescript.length; i++) {
+      resultado += String.fromCharCode(vetorDescript[i]);
+    }
+
+    return resultado;
   }
 }
