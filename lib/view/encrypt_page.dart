@@ -104,7 +104,6 @@ class _EncryptPageState extends State<EncryptPage> {
                     });
                   }),
               SizedBox(height: 30.0),
-              // MoldeTexto(texto: "Chaves geradas", tamanho: 18),
               Column(
                 children: [
                   Row(
@@ -180,12 +179,6 @@ class _EncryptPageState extends State<EncryptPage> {
                     d = await _gerarChaveD(_valor.toInt());
                     e = await _gerarChaveE();
 
-                    // while (e == 0) {
-                    //   e = await _gerarChaveE(seguranca: _valor.toInt());
-                    // }
-                    // _gerarChaveE(seguranca: _valor.toInt(), d: d, z: z);
-                    // await _salvarChaves();
-                    // await _recuperarChaves();
                     setState(() {});
                   },
                   child: MoldeTexto(texto: "Gerar novas chaves", tamanho: 18),
@@ -202,15 +195,6 @@ class _EncryptPageState extends State<EncryptPage> {
               TextInput(
                 controller: _controller,
               ),
-              // TextFormField(
-              //   controller: _controller,
-              //   maxLength: 280,
-              //   maxLines: 5,
-              //   decoration: InputDecoration(
-              //       enabledBorder: OutlineInputBorder(
-              //           borderSide: BorderSide(width: 3.0, color: Colors.blue),
-              //           borderRadius: BorderRadius.circular(15.0))),
-              // ),
               SizedBox(height: 10.0),
               Center(
                 child: ElevatedButton(
@@ -233,13 +217,6 @@ class _EncryptPageState extends State<EncryptPage> {
                         backgroundColor: Colors.blue,
                         padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0))),
               ),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       setState(() {
-              //         _recuperarChaves();
-              //       });
-              //     },
-              //     child: Text("Teste"))
             ],
           ),
         ),
@@ -319,19 +296,15 @@ class _EncryptPageState extends State<EncryptPage> {
     switch (seguranca) {
       case 1:
         valor = _geradorDePrimos(53);
-        // valor = _geradorDePrimos(15);
         break;
       case 2:
         valor = _geradorDePrimos(95);
-        // valor = _geradorDePrimos(25);
         break;
       case 3:
         valor = _geradorDePrimos(132);
-        // valor = _geradorDePrimos(35);
         break;
       case 4:
         valor = _geradorDePrimos(167);
-        // valor = _geradorDePrimos(46);
         break;
     }
 

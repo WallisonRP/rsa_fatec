@@ -23,6 +23,20 @@ class _HomePageState extends State<HomePage> {
         title: Text(
           'Criptografia RSA',
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, 'about');
+              },
+              child: Icon(
+                Icons.info_outline,
+                size: 32,
+              ),
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Row(
