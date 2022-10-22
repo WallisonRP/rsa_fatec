@@ -82,7 +82,7 @@ class _EncryptPageState extends State<EncryptPage> {
           ],
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
+          padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -92,7 +92,7 @@ class _EncryptPageState extends State<EncryptPage> {
                   tamanho: 18.0,
                 ),
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: 8.0),
               SfSlider(
                   inactiveColor: Colors.grey,
                   value: _valor,
@@ -130,7 +130,7 @@ class _EncryptPageState extends State<EncryptPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 16,
+                    height: 18,
                   ),
                   Row(
                     children: [
@@ -152,7 +152,7 @@ class _EncryptPageState extends State<EncryptPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 18,
+                    height: 19,
                   ),
                   Row(
                     children: [
@@ -215,7 +215,7 @@ class _EncryptPageState extends State<EncryptPage> {
                       padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
                 ),
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: 25.0),
               Center(
                   child:
                       MoldeTexto(texto: "Texto a ser encriptado", tamanho: 18)),

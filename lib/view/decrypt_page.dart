@@ -46,7 +46,7 @@ class _DecryptPageState extends State<DecryptPage> {
           title: Text("Desencriptar"),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(24),
+          padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,7 +56,7 @@ class _DecryptPageState extends State<DecryptPage> {
                   tamanho: 18,
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 20),
               Column(
                 children: [
                   Row(
@@ -141,7 +141,7 @@ class _DecryptPageState extends State<DecryptPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
@@ -155,22 +155,29 @@ class _DecryptPageState extends State<DecryptPage> {
                       padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
                 ),
               ),
-              SizedBox(height: 40),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                MoldeTexto(
-                    texto: "Cole abaixo o texto a ser desencriptado",
-                    tamanho: 16),
-                ElevatedButton(
-                    onPressed: () async {
-                      _controller.text = await ClipBoardHelper.paste();
-                    },
-                    child: Text('Colar'))
-              ]),
+              SizedBox(height: 30),
+              Center(
+                  child: MoldeTexto(
+                      texto: "Cole abaixo o texto a ser desencriptado",
+                      tamanho: 14)),
               SizedBox(height: 16),
               TextInput(
                 controller: _controller,
               ),
-              SizedBox(height: 40),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                      onPressed: () async {
+                        _controller.text = await ClipBoardHelper.paste();
+                      },
+                      child: Text('Colar'))
+                ],
+              ),
+              SizedBox(height: 25),
               Center(
                 child: ElevatedButton(
                     onPressed: () async {
