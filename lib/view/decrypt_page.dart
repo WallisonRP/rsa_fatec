@@ -30,6 +30,8 @@ class _DecryptPageState extends State<DecryptPage> {
   int d = 0;
   int e = 0;
   int seguranca = 1;
+  var icon = Icons.visibility_off;
+  String dPrivado = '***';
 
   @override
   Widget build(BuildContext context) {
@@ -54,43 +56,92 @@ class _DecryptPageState extends State<DecryptPage> {
                   tamanho: 18,
                 ),
               ),
-              SizedBox(height: 50),
-              Row(
+              SizedBox(height: 30),
+              Column(
                 children: [
-                  MoldeTexto(texto: "Chaves privadas", tamanho: 18),
-                  SizedBox(width: 14),
-                  Icon(Icons.visibility_off)
+                  Row(
+                    children: [
+                      MoldeTexto(texto: "Chaves geradas", tamanho: 20.0),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        MoldeTexto(texto: "P = $p", tamanho: 18.0),
+                        MoldeTexto(texto: "Q = $q", tamanho: 18.0),
+                        MoldeTexto(texto: "Z = $z", tamanho: 18.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        MoldeTexto(texto: "E = $e", tamanho: 18.0),
+                        MoldeTexto(texto: "N = $n", tamanho: 18.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 18,
+                  ),
+                  Row(
+                    children: [
+                      MoldeTexto(texto: "Chaves privadas", tamanho: 18),
+                      SizedBox(width: 14.0),
+                      GestureDetector(
+                        child: Icon(icon),
+                        onTap: () {
+                          if (icon == Icons.visibility_off) {
+                            icon = Icons.visibility;
+                          } else if (icon == Icons.visibility) {
+                            icon = Icons.visibility_off;
+                          }
+                          setState(() {});
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        icon == Icons.visibility_off
+                            ? MoldeTexto(texto: "$dPrivado", tamanho: 20)
+                            : MoldeTexto(texto: "D = $d", tamanho: 18),
+                        icon == Icons.visibility_off
+                            ? MoldeTexto(texto: "$dPrivado", tamanho: 20)
+                            : MoldeTexto(texto: "N = $n", tamanho: 18),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 8),
-              Container(
-                child: GridView.count(
-                  shrinkWrap: true,
-                  childAspectRatio: (1 / 0.2),
-                  crossAxisCount: 3,
-                  children: [
-                    MoldeTexto(texto: "P = $p", tamanho: 18),
-                    MoldeTexto(texto: "Q = $q", tamanho: 18),
-                    MoldeTexto(texto: "D = $d", tamanho: 18),
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              MoldeTexto(texto: "Chaves públicas", tamanho: 18),
-              SizedBox(height: 8),
-              Container(
-                child: GridView.count(
-                  shrinkWrap: true,
-                  childAspectRatio: (1 / 0.2),
-                  crossAxisCount: 3,
-                  children: [
-                    MoldeTexto(texto: "N = $n", tamanho: 18),
-                    MoldeTexto(texto: "Z = $z", tamanho: 18),
-                    MoldeTexto(texto: "E = $e", tamanho: 18),
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
+              SizedBox(height: 40),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {

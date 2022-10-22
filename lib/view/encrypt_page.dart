@@ -32,6 +32,7 @@ class _EncryptPageState extends State<EncryptPage> {
   int z = 0;
   int d = 0;
   int e = 0;
+  String dPrivado = '***';
 
   var icon = Icons.visibility_off;
 
@@ -110,6 +111,51 @@ class _EncryptPageState extends State<EncryptPage> {
                 children: [
                   Row(
                     children: [
+                      MoldeTexto(texto: "Chaves geradas", tamanho: 20.0),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        MoldeTexto(texto: "P = $p", tamanho: 18.0),
+                        MoldeTexto(texto: "Q = $q", tamanho: 18.0),
+                        MoldeTexto(texto: "Z = $z", tamanho: 18.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      childAspectRatio: (1.0 / 0.2),
+                      crossAxisCount: 3,
+                      children: [
+                        MoldeTexto(texto: "E = $e", tamanho: 18.0),
+                        MoldeTexto(texto: "N = $n", tamanho: 18.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 18,
+                  ),
+                  Row(
+                    children: [
                       MoldeTexto(texto: "Chaves privadas", tamanho: 18),
                       SizedBox(width: 14.0),
                       GestureDetector(
@@ -126,7 +172,7 @@ class _EncryptPageState extends State<EncryptPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 10,
                   ),
                   Container(
                     child: GridView.count(
@@ -134,32 +180,12 @@ class _EncryptPageState extends State<EncryptPage> {
                       childAspectRatio: (1.0 / 0.2),
                       crossAxisCount: 3,
                       children: [
-                        MoldeTexto(texto: "P = $p", tamanho: 18),
-                        MoldeTexto(texto: "Q = $q", tamanho: 18),
-                        MoldeTexto(texto: "D = $d", tamanho: 18),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      MoldeTexto(texto: "Chaves públicas", tamanho: 18.0),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    child: GridView.count(
-                      shrinkWrap: true,
-                      childAspectRatio: (1.0 / 0.2),
-                      crossAxisCount: 3,
-                      children: [
-                        MoldeTexto(texto: "N = $n", tamanho: 18.0),
-                        MoldeTexto(texto: "Z = $z", tamanho: 18.0),
-                        MoldeTexto(texto: "E = $e", tamanho: 18.0),
+                        icon == Icons.visibility_off
+                            ? MoldeTexto(texto: "$dPrivado", tamanho: 20)
+                            : MoldeTexto(texto: "D = $d", tamanho: 18),
+                        icon == Icons.visibility_off
+                            ? MoldeTexto(texto: "$dPrivado", tamanho: 20)
+                            : MoldeTexto(texto: "N = $n", tamanho: 18),
                       ],
                     ),
                   ),
