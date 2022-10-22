@@ -14,6 +14,7 @@ void main() async {
   // int d = await _recuperarChaves1('d');
   // int e = await _recuperarChaves1('e');
   runApp(MaterialApp(
+    title: 'RSA FatecRP',
     debugShowCheckedModeBanner: false,
     initialRoute: 'inicio',
     routes: {

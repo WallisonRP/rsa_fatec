@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:rsa_fatec/view/decrypt_page.dart';
 
+import '../model/bottom.dart';
 import 'encrypt_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ), //SizedBox
-      //Cent,
+      bottomNavigationBar: BottomInfo(),
     );
   }
 }

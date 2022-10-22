@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../model/bottom.dart';
 import '../model/pessoa.dart';
 
 class AboutPage extends StatefulWidget {
@@ -19,87 +20,88 @@ class _AboutPageState extends State<AboutPage> {
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Color(0xffD9D9D9),
         title: Text(
-          'Sobre',
+          'Informações do projeto',
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.fromLTRB(16, 32, 16, 32),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 16, 10, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Informações do projeto',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 80,
+              child: Text(
+                'Aplicativo desenvolvido para a disciplina de Segurança da Informação na Fatec Ribeirão Preto, com a proposta de criar um algoritmo RSA, para criptografia de textos.',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
             SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 50,
-              child: Flexible(
-                  child: Text(
-                      'Aplicativo desenvolvido para a disciplina de Segurança da Informação na Fatec Ribeirão Preto, com a proposta de criar um algoritmo RSA, para criptografia de textos.')),
-            ),
-            SizedBox(
-              height: 25,
+              height: 8,
             ),
             Text('Participantes',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             SizedBox(
-              height: 25,
+              height: 15,
             ),
             Pessoa(
               nome: 'Carlos Danilo Gaioli Euzebio',
               funcao: 'Professor responsável',
               foto: 'carlos',
+              email: 'carlos.euzebio',
             ),
             SizedBox(
-              height: 18,
+              height: 12,
             ),
             Pessoa(
               nome: 'Ciro Emanuel Augusto Abib',
               funcao: 'Aluno da Fatec RP',
               foto: 'ciro',
+              email: 'ciro.abib',
             ),
             SizedBox(
-              height: 18,
+              height: 12,
             ),
             Pessoa(
               nome: 'Gabriel Afonso Pinho de Oliveira',
               funcao: 'Aluno da Fatec RP',
               foto: 'gabriel',
+              email: 'gabriel.oliveira237',
             ),
             SizedBox(
-              height: 18,
+              height: 12,
             ),
             Pessoa(
               nome: 'Gustavo da Silva Patrocínio',
               funcao: 'Aluno da Fatec RP',
               foto: 'gustavomm',
+              email: 'gustavo.patrocinio',
             ),
             SizedBox(
-              height: 18,
+              height: 12,
             ),
             Pessoa(
               nome: 'Gustavo Macrini Godencio',
               funcao: 'Aluno da Fatec RP',
               foto: 'gustavo',
+              email: 'gustavo.godencio',
             ),
             SizedBox(
-              height: 18,
+              height: 12,
             ),
             Pessoa(
               nome: 'Wallison Franklin Pereira',
               funcao: 'Aluno da Fatec RP',
               foto: 'wallison',
+              email: 'wallison.pereira',
             ),
             SizedBox(
-              height: 18,
+              height: 12,
             ),
           ],
         ),
       ),
+      bottomNavigationBar: BottomInfo(),
     );
   }
 }

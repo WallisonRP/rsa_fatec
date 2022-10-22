@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/bottom.dart';
+import '../model/caixa_de_erro.dart';
 import '../model/caixa_de_aviso.dart';
 import '../model/molde_texto.dart';
 import 'dart:math';
@@ -199,18 +201,46 @@ class _EncryptPageState extends State<EncryptPage> {
               Center(
                 child: ElevatedButton(
                     onPressed: () {
-                      String retorno = _encryptText(_controller.text);
-                      _salvarChaves();
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return CaixaAlerta(
-                              texto: retorno,
-                              titulo: 'Texto encriptado',
-                              descricao: 'Copie o texto abaixo e o mantenha em segurança: ',
-                              context2: context,
-                            );
-                          });
+                      if (p == 0 ||
+                          q == 0 ||
+                          n == 0 ||
+                          z == 0 ||
+                          d == 0 ||
+                          e == 0) {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CaixaErro(
+                                titulo: 'Chaves incorretas',
+                                descricao:
+                                    'Verifique as chaves e tente novamente!',
+                              );
+                            });
+                      } else if (_controller.text == "") {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CaixaErro(
+                                titulo: 'Texto incorreto',
+                                descricao:
+                                    'Ops, parece que nenhum texto foi inserido.',
+                              );
+                            });
+                      } else {
+                        String retorno = _encryptText(_controller.text);
+                        _salvarChaves();
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CaixaAlerta(
+                                texto: retorno,
+                                titulo: 'Texto encriptado',
+                                descricao:
+                                    'Copie o texto abaixo e o mantenha em segurança: ',
+                                context2: context,
+                              );
+                            });
+                      }
                     },
                     child: MoldeTexto(texto: "Encriptar", tamanho: 18),
                     style: ElevatedButton.styleFrom(
@@ -220,6 +250,7 @@ class _EncryptPageState extends State<EncryptPage> {
             ],
           ),
         ),
+        bottomNavigationBar: BottomInfo(),
       ),
     );
   }
@@ -232,6 +263,7 @@ class _EncryptPageState extends State<EncryptPage> {
     await prefs.setInt('z', z);
     await prefs.setInt('d', d);
     await prefs.setInt('e', e);
+    await prefs.setInt('seguranca', _valor.toInt());
   }
 
   _encryptText(String texto) {

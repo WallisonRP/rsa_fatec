@@ -5,7 +5,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controller/clipboard.dart';
 import '../controller/decrypt_function.dart';
+import '../model/bottom.dart';
+import '../model/caixa_de_erro.dart';
 import '../model/caixa_de_aviso.dart';
 import '../model/molde_texto.dart';
 import '../model/text_input.dart';
@@ -26,108 +29,149 @@ class _DecryptPageState extends State<DecryptPage> {
   int z = 0;
   int d = 0;
   int e = 0;
+  int seguranca = 1;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-        title: Text("Desencriptar"),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: MoldeTexto(
-                texto: "Nível de segurança: 1",
-                tamanho: 18,
-              ),
-            ),
-            SizedBox(height: 50),
-            Row(
-              children: [
-                MoldeTexto(texto: "Chaves privadas", tamanho: 18),
-                SizedBox(width: 14),
-                Icon(Icons.visibility_off)
-              ],
-            ),
-            SizedBox(height: 8),
-            Container(
-              child: GridView.count(
-                shrinkWrap: true,
-                childAspectRatio: (1 / 0.2),
-                crossAxisCount: 3,
-                children: [
-                  MoldeTexto(texto: "P = $p", tamanho: 18),
-                  MoldeTexto(texto: "Q = $q", tamanho: 18),
-                  MoldeTexto(texto: "D = $d", tamanho: 18),
-                ],
-              ),
-            ),
-            SizedBox(height: 30),
-            MoldeTexto(texto: "Chaves públicas", tamanho: 18),
-            SizedBox(height: 8),
-            Container(
-              child: GridView.count(
-                shrinkWrap: true,
-                childAspectRatio: (1 / 0.2),
-                crossAxisCount: 3,
-                children: [
-                  MoldeTexto(texto: "N = $n", tamanho: 18),
-                  MoldeTexto(texto: "Z = $z", tamanho: 18),
-                  MoldeTexto(texto: "E = $e", tamanho: 18),
-                ],
-              ),
-            ),
-            SizedBox(height: 30),
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    _recuperarChaves();
-                  });
-                },
-                child: MoldeTexto(texto: "Recuperar chaves", tamanho: 18),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
-              ),
-            ),
-            SizedBox(height: 40),
-            Center(
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          centerTitle: true,
+          title: Text("Desencriptar"),
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
                 child: MoldeTexto(
-                    texto: "Cole abaixo o texto a ser desencriptado",
-                    tamanho: 16)),
-            SizedBox(height: 10),
-            TextInput(
-              controller: _controller,
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: ElevatedButton(
+                  texto: "Nível de segurança: $seguranca",
+                  tamanho: 18,
+                ),
+              ),
+              SizedBox(height: 50),
+              Row(
+                children: [
+                  MoldeTexto(texto: "Chaves privadas", tamanho: 18),
+                  SizedBox(width: 14),
+                  Icon(Icons.visibility_off)
+                ],
+              ),
+              SizedBox(height: 8),
+              Container(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  childAspectRatio: (1 / 0.2),
+                  crossAxisCount: 3,
+                  children: [
+                    MoldeTexto(texto: "P = $p", tamanho: 18),
+                    MoldeTexto(texto: "Q = $q", tamanho: 18),
+                    MoldeTexto(texto: "D = $d", tamanho: 18),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              MoldeTexto(texto: "Chaves públicas", tamanho: 18),
+              SizedBox(height: 8),
+              Container(
+                child: GridView.count(
+                  shrinkWrap: true,
+                  childAspectRatio: (1 / 0.2),
+                  crossAxisCount: 3,
+                  children: [
+                    MoldeTexto(texto: "N = $n", tamanho: 18),
+                    MoldeTexto(texto: "Z = $z", tamanho: 18),
+                    MoldeTexto(texto: "E = $e", tamanho: 18),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              Center(
+                child: ElevatedButton(
                   onPressed: () async {
-                    String retorno = _decryptText(_controller.text);
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return CaixaAlerta(
-                            texto: retorno,
-                            titulo: 'Texto desencriptado',
-                            descricao: 'Copie o texto abaixo e faça bom uso: ',
-                            context2: context,
-                          );
-                        });
+                    setState(() {
+                      _recuperarChaves();
+                    });
                   },
-                  child: MoldeTexto(texto: "Desencriptar", tamanho: 18),
+                  child: MoldeTexto(texto: "Recuperar chaves", tamanho: 18),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      padding: EdgeInsets.fromLTRB(40, 20, 40, 20))),
-            ),
-          ],
+                      padding: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0)),
+                ),
+              ),
+              SizedBox(height: 40),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                MoldeTexto(
+                    texto: "Cole abaixo o texto a ser desencriptado",
+                    tamanho: 16),
+                ElevatedButton(
+                    onPressed: () async {
+                      _controller.text = await ClipBoardHelper.paste();
+                    },
+                    child: Text('Colar'))
+              ]),
+              SizedBox(height: 16),
+              TextInput(
+                controller: _controller,
+              ),
+              SizedBox(height: 40),
+              Center(
+                child: ElevatedButton(
+                    onPressed: () async {
+                      if (p == 0 ||
+                          q == 0 ||
+                          n == 0 ||
+                          z == 0 ||
+                          d == 0 ||
+                          e == 0) {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CaixaErro(
+                                titulo: 'Chaves incorretas',
+                                descricao:
+                                    'Verifique as chaves recuperadas e tente novamente!',
+                              );
+                            });
+                      } else if (_controller.text == "") {
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CaixaErro(
+                                titulo: 'Texto incorreto',
+                                descricao:
+                                    'Ops, parece que nenhum texto foi inserido.',
+                              );
+                            });
+                      } else {
+                        String retorno = _decryptText(_controller.text);
+                        showDialog(
+                            context: context,
+                            builder: (_) {
+                              return CaixaAlerta(
+                                texto: retorno,
+                                titulo: 'Texto desencriptado',
+                                descricao:
+                                    'Copie o texto abaixo e faça bom uso: ',
+                                context2: context,
+                              );
+                            });
+                      }
+                    },
+                    child: MoldeTexto(texto: "Desencriptar", tamanho: 18),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.fromLTRB(40, 20, 40, 20))),
+              ),
+            ],
+          ),
         ),
+        bottomNavigationBar: BottomInfo(),
       ),
     );
   }
@@ -140,6 +184,8 @@ class _DecryptPageState extends State<DecryptPage> {
     z = await prefs.getInt('z')!.toInt();
     d = await prefs.getInt('d')!.toInt();
     e = await prefs.getInt('e')!.toInt();
+    seguranca = await prefs.getInt('seguranca')!.toInt();
+
     return true;
   }
 

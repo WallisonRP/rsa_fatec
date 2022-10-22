@@ -4,15 +4,18 @@ class Pessoa extends StatelessWidget {
   final String nome;
   final String funcao;
   final String foto;
+  final String email;
   const Pessoa(
       {super.key,
       required this.nome,
       required this.funcao,
-      required this.foto});
+      required this.foto,
+      required this.email});
 
   @override
   Widget build(BuildContext context) {
     String caminho = 'assets/images/${foto}.jpg';
+    String emailFinal = '${email}@fatec.sp.gov.br';
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +44,11 @@ class Pessoa extends StatelessWidget {
             SizedBox(
               height: 4,
             ),
-            Text(funcao)
+            Text(funcao),
+            SizedBox(
+              height: 4,
+            ),
+            Text(emailFinal)
           ],
         )
       ],
