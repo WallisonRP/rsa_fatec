@@ -109,11 +109,11 @@ class _EncryptPageState extends State<EncryptPage> {
               SizedBox(height: 30.0),
               Column(
                 children: [
-                  Row(
-                    children: [
-                      MoldeTexto(texto: "Chaves geradas", tamanho: 20.0),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     MoldeTexto(texto: "Chaves geradas", tamanho: 20.0),
+                  //   ],
+                  // ),
                   SizedBox(
                     height: 10,
                   ),

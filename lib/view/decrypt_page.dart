@@ -59,11 +59,11 @@ class _DecryptPageState extends State<DecryptPage> {
               SizedBox(height: 20),
               Column(
                 children: [
-                  Row(
-                    children: [
-                      MoldeTexto(texto: "Chaves geradas", tamanho: 20.0),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     MoldeTexto(texto: "Chaves geradas", tamanho: 20.0),
+                  //   ],
+                  // ),
                   SizedBox(
                     height: 10,
                   ),
