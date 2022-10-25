@@ -17,11 +17,8 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Color(0xffD9D9D9),
         title: Text(
           'Informações do projeto',
-          style: TextStyle(color: Colors.black),
         ),
       ),
       body: SingleChildScrollView(
